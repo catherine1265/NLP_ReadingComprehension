@@ -2,7 +2,7 @@ import os
 import gdown
 
 MODELS = {
-    "model.pkl"              : "1lGWcyQBK-3375ZSxIaxcYGzpwaZI_Vhd",
+    "modelnlp.pkl"           : "1lGWcyQBK-3375ZSxIaxcYGzpwaZI_Vhd",
     "squad_preprocessed.csv" : "1BLbROC4QhxAMR33v-nb51GvlemFWZAo-",
 }
 
