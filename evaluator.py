@@ -6,10 +6,14 @@ warnings.filterwarnings('ignore')
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
 from model_loader import ensure_models
+import streamlit as st
 
-ensure_models()
+@st.cache_resource
+def load_ner_model():
+    ensure_models()
+    return pickle.load(open('model.pkl', 'rb'))
 
-ner_model = pickle.load(open('model.pkl', 'rb'))
+ner_model = load_ner_model()
 
 def evaluate_answer(user_answer: str, correct_answer: str) -> dict:
     if not user_answer or not user_answer.strip():
