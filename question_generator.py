@@ -1,13 +1,7 @@
 import re
 import spacy
-import os
 
-model_name = "en_core_web_sm"
-try:
-    nlp = spacy.load(model_name)
-except OSError:
-    os.system(f"python -m spacy download {model_name}")
-    nlp = spacy.load(model_name)
+nlp = spacy.load("en_core_web_sm")
 
 NER_PRIORITY = {
     "PERSON": 1, "NORP": 2,     "ORG": 3,
