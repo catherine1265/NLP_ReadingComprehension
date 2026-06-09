@@ -1,8 +1,14 @@
 import re
 import spacy
+import sys
+import subprocess
 
-nlp = spacy.load("en_core_web_sm")
-
+try:
+    nlp = spacy.load("en_core_web_sm")
+except OSError:
+    print("Downloading spacy model...")
+    subprocess.run([sys.executable, "-m", "spacy", "download", "en_core_web_sm"], check=True)
+    nlp = spacy.load("en_core_web_sm")
 NER_PRIORITY = {
     "PERSON": 1, "NORP": 2,     "ORG": 3,
     "GPE"   : 4, "LOC" : 5,     "FAC": 6,
