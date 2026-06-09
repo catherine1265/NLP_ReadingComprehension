@@ -11,7 +11,7 @@ import streamlit as st
 @st.cache_resource
 def load_ner_model():
     ensure_models()
-    return pickle.load(open('model.pkl', 'rb'))
+    return pickle.load(open('modelnlp.pkl', 'rb'))
 
 ner_model = load_ner_model()
 
