@@ -1,16 +1,7 @@
 import re
 import spacy
 
-def get_nlp():
-    try:
-        return spacy.load("en_core_web_sm")
-    except OSError:
-        import subprocess
-        import sys
-        subprocess.check_call([sys.executable, "-m", "spacy", "download", "en_core_web_sm"])
-        return spacy.load("en_core_web_sm")
-
-nlp = None
+nlp = spacy.load("en_core_web_sm")
 
 NER_PRIORITY = {
     "PERSON": 1, "NORP": 2,     "ORG": 3,
@@ -38,9 +29,6 @@ def split_paragraphs(text):
     return paragraphs
 
 def extract_candidates(paragraph):
-    global nlp
-    if nlp is None: nlp = get_nlp()
-    
     doc  = nlp(paragraph)
     seen = set()
     candidates = []
@@ -63,9 +51,6 @@ def extract_candidates(paragraph):
     return sorted(candidates, key=lambda x: x["priority"])[:3]
 
 def to_base_form(sentence):
-    global nlp
-    if nlp is None: nlp = get_nlp()
-    
     doc    = nlp(sentence)
     result = []
     for token in doc:
@@ -100,9 +85,6 @@ def form_question(sentence, answer, qword):
     return f"What {blanked}?"
 
 def generate_answer_key(passage):
-    global nlp
-    if nlp is None: nlp = get_nlp()
-    
     paragraphs   = split_paragraphs(passage)
     result       = []
     used_answers = set()
