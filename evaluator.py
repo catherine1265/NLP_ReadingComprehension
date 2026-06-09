@@ -1,11 +1,3 @@
-import pickle
-import warnings
-import numpy as np
-warnings.filterwarnings('ignore')
-
-from sklearn.feature_extraction.text import TfidfVectorizer
-from sklearn.metrics.pairwise import cosine_similarity
-from model_loader import ensure_models
 import streamlit as st
 
 @st.cache_resource
