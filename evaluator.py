@@ -1,3 +1,20 @@
+import pickle
+import warnings
+import numpy as np
+warnings.filterwarnings('ignore')
+
+from sklearn.feature_extraction.text import TfidfVectorizer
+from sklearn.metrics.pairwise import cosine_similarity
+from model_loader import ensure_models
+import streamlit as st
+
+@st.cache_resource
+def load_ner_model():
+    ensure_models()
+    return pickle.load(open('model.pkl', 'rb'))
+
+ner_model = load_ner_model()
+
 def evaluate_answer(user_answer: str, correct_answer: str) -> dict:
     if not user_answer or not user_answer.strip():
         return {
@@ -9,9 +26,8 @@ def evaluate_answer(user_answer: str, correct_answer: str) -> dict:
 
     user_ner    = ner_model.predict([user_answer])[0]
     correct_ner = ner_model.predict([correct_answer])[0]
-    ner_match   = (user_ner == correct_ner
+    ner_match   = (user_ner == correct_ner)
 
-    # Step 2: Hitung cosine similarity dengan TF-IDF
     tfidf   = TfidfVectorizer(ngram_range=(1, 2), sublinear_tf=True)
     vectors = tfidf.fit_transform([
         user_answer.lower().strip(),
@@ -19,14 +35,11 @@ def evaluate_answer(user_answer: str, correct_answer: str) -> dict:
     ])
     similarity = float(cosine_similarity(vectors[0], vectors[1])[0][0])
 
-    # Step 3: Tentukan score & is_correct
-    # NER match → minimal score 0.5 (tipe jawaban benar)
     score = similarity
     if ner_match:
         score = max(score, 0.5)
     score = round(score, 4)
 
-    # Benar jika: NER sama ATAU similarity >= 0.5
     is_correct = ner_match or (similarity >= 0.5)
 
     return {
